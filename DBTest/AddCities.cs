@@ -15,6 +15,8 @@ namespace DBTest
     {
         SqlCommand sqlCommand;
         SqlConnection sqlConnection;
+        string dbName = "UsersRolesCities";
+
         public DataTable Select(string selectSQL) // функция подключения к базе данных и обработка запросов
         {
             DataTable dataTable = new DataTable("dataBase");
@@ -44,8 +46,7 @@ namespace DBTest
             regions_list.Add("New region");
             regions.DataSource = regions_list;
         }
-        string dbName = "UsersRolesCities";
-
+       
         private void add_Click(object sender, EventArgs e)
         {
             
@@ -53,31 +54,41 @@ namespace DBTest
             DataTable dt_cities = Select($"SELECT * FROM [dbo].[tblCities]");
             SqlConnection con = new SqlConnection($"server=DESKTOP-GBJ31QG;Trusted_Connection=Yes;DataBase={dbName};");
             SqlCommand sqlCommand2 = con.CreateCommand();
-            int flag = -1;
-            if(regions.SelectedIndex == regions.Items.Count-1)
+            if(!string.IsNullOrWhiteSpace(name.Text))
             {
-
-            }
-            for (int i = 0; i < dt_cities.Rows.Count; i++)
-            {
-                if(Convert.ToString(dt_cities.Rows[i][2]) == name.Text && Convert.ToInt32(dt_cities.Rows[i][1]) == regions.SelectedIndex+1)
+                int flag = -1;
+                if (regions.SelectedIndex == regions.Items.Count - 1)
                 {
-                    flag = 1;
+                    AddRegions addRegion = new AddRegions();
+                    addRegion.ShowDialog();
                 }
-            }
-            if(flag == 1)
-            {
-                MessageBox.Show($"Oops, {name.Text} already exists in the database [{dbName}]");
+                for (int i = 0; i < dt_cities.Rows.Count; i++)
+                {
+                    if (Convert.ToString(dt_cities.Rows[i][2]) == name.Text && Convert.ToInt32(dt_cities.Rows[i][1]) == regions.SelectedIndex + 1)
+                    {
+                        flag = 1;
+                    }
+                }
+                if (flag == 1)
+                {
+                    MessageBox.Show($"Oops, {name.Text} already exists in the database [{dbName}]");
+                }
+                else
+                {
+                    con.Open();
+                    sqlCommand2 = con.CreateCommand();
+                    sqlCommand2.CommandText = "INSERT INTO dbo.tblCities " +
+                                       "(RegionId, Name) " +
+                                       $"VALUES('{regions.SelectedIndex + 1}','{name.Text}')";
+                    sqlCommand2.ExecuteNonQuery();
+                }
+                this.Close();
             }
             else
             {
-                con.Open();
-                sqlCommand2 = con.CreateCommand();
-                sqlCommand2.CommandText = "INSERT INTO dbo.tblCities " +
-                                   "(RegionId, Name) " +
-                                   $"VALUES('{regions.SelectedIndex + 1}','{name.Text}')";
-                sqlCommand2.ExecuteNonQuery();
+                MessageBox.Show("Input name field, stupid!");
             }
+            
             
         }
     }
