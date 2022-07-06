@@ -84,12 +84,24 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SqlTables\tblCities.sql" />
-    <Content Include="SqlTables\tblRegions.sql" />
-    <Content Include="SqlTables\tblRoles.sql" />
-    <Content Include="SqlTables\tblUserAdresses.sql" />
-    <Content Include="SqlTables\tblUserRoles.sql" />
-    <Content Include="SqlTables\tblUsers.sql" />
+    <Content Include="SqlTables\tblCities.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlTables\tblRegions.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlTables\tblRoles.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlTables\tblUserAdresses.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlTables\tblUserRoles.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlTables\tblUsers.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
