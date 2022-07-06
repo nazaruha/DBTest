@@ -28,13 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.btn_GenerateTables = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // btn_GenerateTables
+            // 
+            this.btn_GenerateTables.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btn_GenerateTables.Location = new System.Drawing.Point(591, 474);
+            this.btn_GenerateTables.Name = "btn_GenerateTables";
+            this.btn_GenerateTables.Size = new System.Drawing.Size(283, 73);
+            this.btn_GenerateTables.TabIndex = 0;
+            this.btn_GenerateTables.Text = "Generate Tables";
+            this.btn_GenerateTables.UseVisualStyleBackColor = true;
+            this.btn_GenerateTables.Click += new System.EventHandler(this.btn_GenerateTables_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(897, 559);
+            this.Controls.Add(this.btn_GenerateTables);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -42,6 +55,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Button btn_GenerateTables;
     }
 }
 
