@@ -46,7 +46,19 @@ namespace DBTest
 
         private void add_Click(object sender, EventArgs e)
         {
+            DataTable dt_regions = Select($"SELECT * FROM [dbo].[tblRegions]");
+            DataTable dt_cities = Select($"SELECT * FROM [dbo].[tblCities]");
+            SqlConnection con = new SqlConnection($"server=DESKTOP-GBJ31QG;Trusted_Connection=Yes;DataBase=UsersRolesCities;");
+            SqlCommand sqlCommand2 = con.CreateCommand();
+            int region_id = -1;
+            int city_id = -1;
 
+            con.Open();
+            sqlCommand2 = con.CreateCommand();
+            sqlCommand2.CommandText = "INSERT INTO dbo.tblCities " +
+                               "(RegionId, Name) " +
+                               $"VALUES('{regions.SelectedIndex+1}','{name.Text}')";
+            sqlCommand2.ExecuteNonQuery();
         }
     }
 }
