@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using DBTest.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,6 +42,7 @@ namespace DBTest
             cmd = con.CreateCommand();
 
             GenerateTables();
+            GenerateUsers();
         }
 
         private bool IsDatabaseExist()
@@ -80,6 +82,41 @@ namespace DBTest
         {
             string sql = File.ReadAllText($"{dirSql}\\{file}");
             return sql;
+        }
+
+        private void GenerateUsers(int count = 1000000)
+        {
+            Faker<User> faker = new Faker<User>("uk")
+                .RuleFor(u => u.Name, (f, u) => f.Name.FullName());
+
+            List<User> users = new List<User>();
+            for (int i = 0; i < count; i++)
+            {
+                var user = faker.Generate();
+                users.Add(user);
+            }
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add(new DataColumn(nameof(User.Id)));
+            dt.Columns.Add(new DataColumn(nameof(User.Name)));
+
+            Random rnd = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                int r = rnd.Next(0, 100);
+                var user = users[r];
+                DataRow row = dt.NewRow();
+                row[nameof(User.Id)] = user.Id;
+                row[nameof(User.Name)] = user.Name;
+                dt.Rows.Add(row);
+            }
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
+            {
+                bulkCopy.DestinationTableName = "tblUsers";
+                bulkCopy.WriteToServer(dt);
+            }
+
+            MessageBox.Show("END");
         }
     }
 
