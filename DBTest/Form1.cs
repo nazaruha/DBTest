@@ -80,5 +80,11 @@ namespace DBTest
             string sql = File.ReadAllText($"{dirSql}\\{file}");
             return sql;
         }
+
+        private void addCity_Click(object sender, EventArgs e)
+        {
+            AddCities addCities = new AddCities();
+            addCities.ShowDialog();
+        }
     }
 }

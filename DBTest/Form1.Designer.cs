@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.btn_GenerateTables = new System.Windows.Forms.Button();
+            this.addCity = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_GenerateTables
@@ -43,11 +44,22 @@
             this.btn_GenerateTables.UseVisualStyleBackColor = true;
             this.btn_GenerateTables.Click += new System.EventHandler(this.btn_GenerateTables_Click);
             // 
+            // addCity
+            // 
+            this.addCity.Location = new System.Drawing.Point(656, 327);
+            this.addCity.Name = "addCity";
+            this.addCity.Size = new System.Drawing.Size(121, 34);
+            this.addCity.TabIndex = 1;
+            this.addCity.Text = "Add city";
+            this.addCity.UseVisualStyleBackColor = true;
+            this.addCity.Click += new System.EventHandler(this.addCity_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(797, 447);
+            this.Controls.Add(this.addCity);
             this.Controls.Add(this.btn_GenerateTables);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
@@ -59,6 +71,7 @@
         #endregion
 
         private System.Windows.Forms.Button btn_GenerateTables;
+        private System.Windows.Forms.Button addCity;
     }
 }
 
