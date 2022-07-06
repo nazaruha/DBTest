@@ -80,5 +80,6 @@ namespace DBTest
             string sql = File.ReadAllText($"{dirSql}\\{file}");
             return sql;
         }
+
     }
 }
