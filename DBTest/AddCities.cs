@@ -41,6 +41,7 @@ namespace DBTest
                 string r = Convert.ToString(dt_regions.Rows[i][1]);
                 regions_list.Add(r);
             }
+            regions_list.Add("New region");
             regions.DataSource = regions_list;
         }
         string dbName = "UsersRolesCities";
@@ -53,6 +54,10 @@ namespace DBTest
             SqlConnection con = new SqlConnection($"server=DESKTOP-GBJ31QG;Trusted_Connection=Yes;DataBase={dbName};");
             SqlCommand sqlCommand2 = con.CreateCommand();
             int flag = -1;
+            if(regions.SelectedIndex == regions.Items.Count-1)
+            {
+
+            }
             for (int i = 0; i < dt_cities.Rows.Count; i++)
             {
                 if(Convert.ToString(dt_cities.Rows[i][2]) == name.Text && Convert.ToInt32(dt_cities.Rows[i][1]) == regions.SelectedIndex+1)
