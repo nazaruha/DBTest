@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bogus;
+using DBTest.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -80,6 +82,4 @@ namespace DBTest
             string sql = File.ReadAllText($"{dirSql}\\{file}");
             return sql;
         }
-
-    }
 }
