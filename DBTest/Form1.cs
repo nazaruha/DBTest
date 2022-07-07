@@ -42,7 +42,9 @@ namespace DBTest
             cmd = con.CreateCommand();
 
             GenerateTables();
-            //GenerateUsers();
+            GenerateUsers(10);
+            GenerateUserPasswords();
+
         }
 
         private bool IsDatabaseExist()
@@ -103,7 +105,7 @@ namespace DBTest
             Random rnd = new Random();
             for (int i = 0; i < count; i++)
             {
-                int r = rnd.Next(0, 100);
+                int r = rnd.Next(0, count);
                 var user = users[r];
                 DataRow row = dt.NewRow();
                 row[nameof(User.Id)] = user.Id;
@@ -117,6 +119,53 @@ namespace DBTest
             }
 
             MessageBox.Show("END");
+        }
+
+        private List<User> GetUsers()
+        {
+            cmd.CommandText = "SELECT * " +
+                "FROM tblUsers ";
+            List<User> users = new List<User>();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var user = new User() { Id = Int32.Parse(reader["Id"].ToString()), Name = reader["Name"].ToString() };
+                    users.Add(user);
+                }
+            }
+            return users;
+        }
+
+        private void GenerateUserPasswords()
+        {
+            Faker faker = new Faker();
+            List<User> users = GetUsers();
+            for (int i = 0; i < users.Count; i++)
+            {
+                string password = faker.Internet.Password();
+                if (users.Any(u => u.Password == password))
+                    i--;
+                else
+                    users[i].Password = password;
+            }
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add(new DataColumn(nameof(User.Id)));
+            dt.Columns.Add(new DataColumn(nameof(User.Password)));
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                DataRow row = dt.NewRow();
+                row[nameof(User.Id)] = users[i].Id;
+                row[nameof(User.Password)] = users[i].Password;
+                dt.Rows.Add(row);
+            }
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
+            {
+                bulkCopy.DestinationTableName = "tblUserPasswords";
+                bulkCopy.WriteToServer(dt);
+            }
         }
     }
 
