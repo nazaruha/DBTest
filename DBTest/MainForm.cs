@@ -46,6 +46,7 @@ namespace DBTest
             GenerateUsers(10);
             GenerateUserPasswords();
             GenerateUserRoles();
+            GenerateUserAddresses();
         }
 
         private bool IsDatabaseExist()
@@ -67,7 +68,7 @@ namespace DBTest
 
         private void GenerateTables()
         {
-            string[] tables = { "tblRegions.sql", "tblCities.sql", "tblRoles.sql", "tblUsers.sql", "tblUserPasswords.sql", "tblUserRoles.sql", "tblUserAdresses.sql" };
+            string[] tables = { "tblRegions.sql", "tblCities.sql", "tblRoles.sql", "tblUsers.sql", "tblUserPasswords.sql", "tblUserRoles.sql", "tblUserAddresses.sql" };
             foreach (var table in tables)
             {
                 ExecuteCommandFromFile(table);
@@ -206,6 +207,59 @@ namespace DBTest
                 }
             }
             return roleIds;
+        }
+
+        private void GenerateUserAddresses()
+        {
+            Faker faker = new Faker();
+            List<int> cityIds = GetCityId();
+
+            Random rnd = new Random();
+            for (int i = 0; i < users.Count; i++)
+            {
+                int r = rnd.Next(0, cityIds.Count - 1);
+                users[i].CityId = cityIds[r];
+                users[i].Street = faker.Address.StreetAddress();
+                users[i].HouseNumber = faker.Address.BuildingNumber();
+            }
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("UserId");
+            dt.Columns.Add(new DataColumn(nameof(User.CityId)));
+            dt.Columns.Add("Street");
+            dt.Columns.Add("HouseNumber");
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["UserId"] = users[i].Id;
+                row[nameof(User.CityId)] = users[i].CityId;
+                row["Street"] = users[i].Street;
+                row["HouseNumber"] = users[i].HouseNumber;
+                dt.Rows.Add(row);
+            }
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
+            {
+                bulkCopy.DestinationTableName = "tblUserAddresses";
+                bulkCopy.WriteToServer(dt);
+            }
+
+        }
+
+        private List<int> GetCityId()
+        {
+            cmd.CommandText = "SELECT c.Id " +
+                "FROM tblCities AS c";
+
+            List<int> cityIds = new List<int>();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    cityIds.Add(Int32.Parse(reader["Id"].ToString()));
+                }
+            }
+            return cityIds;
         }
 
     }

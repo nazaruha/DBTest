@@ -112,7 +112,7 @@
     <Content Include="SqlTables\tblRoles.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SqlTables\tblUserAdresses.sql">
+    <Content Include="SqlTables\tblUserAddresses.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SqlTables\tblUserRoles.sql">
