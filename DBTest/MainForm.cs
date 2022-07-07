@@ -21,14 +21,29 @@ namespace DBTest
         private SqlConnection con;
         private SqlCommand cmd;
         private List<User> users = new List<User>();
+        private string conStr = "Data Source=.;Integrated Security=True;";
+
         public MainForm()
         {
             InitializeComponent();
+            string connectionStr = $"{conStr}Initial Catalog={dbName}";
+            con = new SqlConnection(connectionStr);
+            con.Open();
+            cmd = con.CreateCommand();
+
+            GetAllUsersData();
+
+            dgUsers.DataSource = users;
+            dgUsers.Columns["Password"].Visible = false;
+            dgUsers.Columns["CityId"].Visible = false;
+            dgUsers.Columns["RegionId"].Visible = false;
+            dgUsers.Columns["RoleId"].Visible = false;
+
+
         }
 
         private void btn_GenerateTables_Click(object sender, EventArgs e)
         {
-            string conStr = "Data Source=.;Integrated Security=True;";
             string connectionStr = $"{conStr}Initial Catalog={dbName}";
 
             con = new SqlConnection(conStr);
@@ -42,11 +57,7 @@ namespace DBTest
             con.Open();
             cmd = con.CreateCommand();
 
-            GenerateTables();
-            GenerateUsers(10);
-            GenerateUserPasswords();
-            GenerateUserRoles();
-            GenerateUserAddresses();
+            GenerateTablesAndUsers();
         }
 
         private bool IsDatabaseExist()
@@ -64,6 +75,17 @@ namespace DBTest
                 }
             }
             return false;
+        }
+
+        private void GenerateTablesAndUsers() 
+        {
+            int userCount = 10;
+            GenerateTables();
+            users = GetUsers();
+            GenerateUsers(userCount);
+            GenerateUserPasswords();
+            GenerateUserRoles();
+            GenerateUserAddresses();
         }
 
         private void GenerateTables()
@@ -124,7 +146,7 @@ namespace DBTest
         {
             users.Clear();
             cmd.CommandText = "SELECT * " +
-                "FROM tblUsers ";
+                "FROM tblUsers";
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -134,6 +156,57 @@ namespace DBTest
                 }
             }
             return users;
+        }
+
+        private void GetAllUsersData()
+        {
+            cmd.CommandText = "SELECT u.Id AS UserId, u.[Name], up.[Password], " +
+                "c.Id AS CityId, c.[Name] AS City, " +
+                "r.Id AS RegionId, r.[Name] AS Region, Street, HouseNumber " +
+                "FROM tblUserAddresses AS ua " +
+                "LEFT JOIN tblUsers AS u " +
+                "ON ua.UserId = u.Id " +
+                "LEFT JOIN tblCities AS c " +
+                "ON ua.CityId = c.Id " +
+                "LEFT JOIN tblRegions AS r " +
+                "ON c.RegionId = r.Id " +
+                "LEFT JOIN tblUserPasswords AS up " +
+                "ON u.Id = up.UserId";
+            users.Clear();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    User user = new User() { Id = Int32.Parse(reader["UserId"].ToString()), 
+                        Name = reader["Name"].ToString(),
+                        Password = reader["Password"].ToString(),
+                        CityId = Int32.Parse(reader["CityId"].ToString()),
+                        City = reader["City"].ToString(),
+                        RegionId = Int32.Parse(reader["RegionId"].ToString()),
+                        Region = reader["Region"].ToString(),
+                        Street = reader["Street"].ToString(),
+                        HouseNumber = reader["HouseNumber"].ToString() };
+                    users.Add(user);
+                }
+            }
+            GetUsersRoles();
+        }
+
+        private void GetUsersRoles()
+        {
+            for (int i = 0; i < users.Count; i++)
+            {
+                cmd.CommandText = "SELECT ur.RoleId, r.[Name] AS Role " +
+                    "FROM tblUserRoles AS ur " +
+                    "LEFT JOIN tblRoles AS r " +
+                    "ON ur.RoleId = r.Id " +
+                    $"WHERE ur.UserId = {users[i].Id}";
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                users[i].RoleId = Int32.Parse(reader["RoleId"].ToString());
+                users[i].Role = reader["Role"].ToString();
+                reader.Close();
+            }
         }
 
         private void GenerateUserPasswords()
