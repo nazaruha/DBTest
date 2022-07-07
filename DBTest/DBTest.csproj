@@ -103,6 +103,9 @@
     <Content Include="SqlTables\tblUserRoles.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SqlTables\tblUserPasswords.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SqlTables\tblUsers.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

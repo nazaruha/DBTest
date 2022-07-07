@@ -42,7 +42,7 @@ namespace DBTest
             cmd = con.CreateCommand();
 
             GenerateTables();
-            GenerateUsers();
+            //GenerateUsers();
         }
 
         private bool IsDatabaseExist()
@@ -64,7 +64,7 @@ namespace DBTest
 
         private void GenerateTables()
         {
-            string[] tables = { "tblRegions.sql", "tblCities.sql", "tblRoles.sql", "tblUsers.sql", "tblUserRoles.sql", "tblUserAdresses.sql" };
+            string[] tables = { "tblRegions.sql", "tblCities.sql", "tblRoles.sql", "tblUsers.sql", "tblUserPasswords.sql", "tblUserRoles.sql", "tblUserAdresses.sql" };
             foreach (var table in tables)
             {
                 ExecuteCommandFromFile(table);
