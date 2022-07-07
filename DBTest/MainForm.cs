@@ -20,6 +20,7 @@ namespace DBTest
         private string dbName = "UsersRolesCities";
         private SqlConnection con;
         private SqlCommand cmd;
+        private List<User> users = new List<User>();
         public MainForm()
         {
             InitializeComponent();
@@ -44,7 +45,7 @@ namespace DBTest
             GenerateTables();
             GenerateUsers(10);
             GenerateUserPasswords();
-
+            GenerateUserRoles();
         }
 
         private bool IsDatabaseExist()
@@ -91,7 +92,6 @@ namespace DBTest
             Faker<User> faker = new Faker<User>("uk")
                 .RuleFor(u => u.Name, (f, u) => f.Name.FullName());
 
-            List<User> users = new List<User>();
             for (int i = 0; i < count; i++)
             {
                 var user = faker.Generate();
@@ -117,15 +117,13 @@ namespace DBTest
                 bulkCopy.DestinationTableName = "tblUsers";
                 bulkCopy.WriteToServer(dt);
             }
-
-            MessageBox.Show("END");
         }
 
         private List<User> GetUsers()
         {
+            users.Clear();
             cmd.CommandText = "SELECT * " +
                 "FROM tblUsers ";
-            List<User> users = new List<User>();
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -140,7 +138,6 @@ namespace DBTest
         private void GenerateUserPasswords()
         {
             Faker faker = new Faker();
-            List<User> users = GetUsers();
             for (int i = 0; i < users.Count; i++)
             {
                 string password = faker.Internet.Password();
@@ -167,6 +164,50 @@ namespace DBTest
                 bulkCopy.WriteToServer(dt);
             }
         }
+        private void GenerateUserRoles()
+        {
+            List<int> roleIds = GetRoleId();
+            Random rnd = new Random();
+            for (int i = 0; i < users.Count; i++)
+            {
+                int r = rnd.Next(0, roleIds.Count - 1);
+                users[i].RoleId = roleIds[r];
+            }
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("UserId");
+            dt.Columns.Add(new DataColumn(nameof(User.RoleId)));
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["UserId"] = users[i].Id;
+                row[nameof(User.RoleId)] = users[i].RoleId;
+                dt.Rows.Add(row);
+            }
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(con))
+            {
+                bulkCopy.DestinationTableName = "tblUserRoles";
+                bulkCopy.WriteToServer(dt);
+            }
+        }
+
+        private List<int> GetRoleId()
+        {
+            cmd.CommandText = "SELECT r.Id " +
+                "FROM tblRoles AS r";
+
+            List<int> roleIds = new List<int>();
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    roleIds.Add(Int32.Parse(reader["Id"].ToString()));
+                }
+            }
+            return roleIds;
+        }
+
     }
 
 }
