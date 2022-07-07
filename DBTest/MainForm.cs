@@ -14,13 +14,13 @@ using System.Windows.Forms;
 
 namespace DBTest
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private string dirSql = "SqlTables";
         private string dbName = "UsersRolesCities";
         private SqlConnection con;
         private SqlCommand cmd;
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
