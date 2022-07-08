@@ -205,7 +205,7 @@
             // 
             this.lb_HouseNumber.AutoSize = true;
             this.lb_HouseNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lb_HouseNumber.Location = new System.Drawing.Point(374, 295);
+            this.lb_HouseNumber.Location = new System.Drawing.Point(372, 299);
             this.lb_HouseNumber.Name = "lb_HouseNumber";
             this.lb_HouseNumber.Size = new System.Drawing.Size(149, 29);
             this.lb_HouseNumber.TabIndex = 0;
@@ -214,7 +214,7 @@
             // txt_HouseNum
             // 
             this.txt_HouseNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_HouseNum.Location = new System.Drawing.Point(527, 291);
+            this.txt_HouseNum.Location = new System.Drawing.Point(525, 295);
             this.txt_HouseNum.Multiline = true;
             this.txt_HouseNum.Name = "txt_HouseNum";
             this.txt_HouseNum.Size = new System.Drawing.Size(268, 41);
