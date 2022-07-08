@@ -64,7 +64,7 @@
             this.txt_Password.Multiline = true;
             this.txt_Password.Name = "txt_Password";
             this.txt_Password.Size = new System.Drawing.Size(268, 41);
-            this.txt_Password.TabIndex = 1;
+            this.txt_Password.TabIndex = 2;
             this.txt_Password.TextChanged += new System.EventHandler(this.txt_PswrdAndName_TextChanged);
             // 
             // lb_Password
@@ -135,7 +135,7 @@
             this.cb_City.Location = new System.Drawing.Point(418, 168);
             this.cb_City.Name = "cb_City";
             this.cb_City.Size = new System.Drawing.Size(375, 37);
-            this.cb_City.TabIndex = 3;
+            this.cb_City.TabIndex = 4;
             // 
             // lb_Role
             // 
@@ -154,7 +154,7 @@
             this.cb_Role.Location = new System.Drawing.Point(312, 416);
             this.cb_Role.Name = "cb_Role";
             this.cb_Role.Size = new System.Drawing.Size(200, 37);
-            this.cb_Role.TabIndex = 3;
+            this.cb_Role.TabIndex = 7;
             // 
             // btn_AddUser
             // 
@@ -165,7 +165,7 @@
             this.btn_AddUser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_AddUser.Name = "btn_AddUser";
             this.btn_AddUser.Size = new System.Drawing.Size(359, 72);
-            this.btn_AddUser.TabIndex = 4;
+            this.btn_AddUser.TabIndex = 8;
             this.btn_AddUser.Text = "Add User";
             this.btn_AddUser.UseVisualStyleBackColor = true;
             this.btn_AddUser.Click += new System.EventHandler(this.btn_AddUser_Click);
@@ -194,11 +194,11 @@
             // txt_Street
             // 
             this.txt_Street.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_Street.Location = new System.Drawing.Point(97, 291);
+            this.txt_Street.Location = new System.Drawing.Point(100, 295);
             this.txt_Street.Multiline = true;
             this.txt_Street.Name = "txt_Street";
             this.txt_Street.Size = new System.Drawing.Size(268, 41);
-            this.txt_Street.TabIndex = 1;
+            this.txt_Street.TabIndex = 5;
             this.txt_Street.TextChanged += new System.EventHandler(this.txt_PswrdAndName_TextChanged);
             // 
             // lb_HouseNumber
@@ -214,11 +214,11 @@
             // txt_HouseNum
             // 
             this.txt_HouseNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_HouseNum.Location = new System.Drawing.Point(525, 291);
+            this.txt_HouseNum.Location = new System.Drawing.Point(527, 291);
             this.txt_HouseNum.Multiline = true;
             this.txt_HouseNum.Name = "txt_HouseNum";
             this.txt_HouseNum.Size = new System.Drawing.Size(268, 41);
-            this.txt_HouseNum.TabIndex = 1;
+            this.txt_HouseNum.TabIndex = 6;
             this.txt_HouseNum.TextChanged += new System.EventHandler(this.txt_PswrdAndName_TextChanged);
             // 
             // AddUserForm
