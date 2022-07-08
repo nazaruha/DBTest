@@ -26,18 +26,30 @@ namespace DBTest
         public MainForm()
         {
             InitializeComponent();
+
             string connectionStr = $"{conStr}Initial Catalog={dbName}";
-            con = new SqlConnection(connectionStr);
+            con = new SqlConnection(conStr);
             con.Open();
-            cmd = con.CreateCommand();
+            if (!IsDatabaseExist())
+            {
+                cmd.CommandText = $"CREATE DATABASE {dbName}";
+                cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                con = new SqlConnection(connectionStr);
+                con.Open();
+                cmd = con.CreateCommand();
 
-            GetAllUsersData();
+                GetAllUsersData();
 
-            dgUsers.DataSource = users;
-            dgUsers.Columns["Password"].Visible = false;
-            dgUsers.Columns["CityId"].Visible = false;
-            dgUsers.Columns["RegionId"].Visible = false;
-            dgUsers.Columns["RoleId"].Visible = false;
+                dgUsers.DataSource = users;
+                dgUsers.Columns["Password"].Visible = false;
+                dgUsers.Columns["CityId"].Visible = false;
+                dgUsers.Columns["RegionId"].Visible = false;
+                dgUsers.Columns["RoleId"].Visible = false;
+            }
+            
 
 
         }
