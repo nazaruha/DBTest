@@ -240,7 +240,7 @@ namespace DBTest
         }
         private void GenerateUserRoles()
         {
-            List<int> roleIds = GetRoleId();
+            List<int> roleIds = GetRolesId();
             Random rnd = new Random();
             for (int i = 0; i < users.Count; i++)
             {
@@ -266,7 +266,7 @@ namespace DBTest
             }
         }
 
-        private List<int> GetRoleId()
+        private List<int> GetRolesId()
         {
             cmd.CommandText = "SELECT r.Id " +
                 "FROM tblRoles AS r";
@@ -335,6 +335,11 @@ namespace DBTest
             return cityIds;
         }
 
+        private void btn_AddUser_Click(object sender, EventArgs e)
+        {
+            AddUserForm addUserFrom = new AddUserForm(cmd);
+            addUserFrom.ShowDialog();
+        }
     }
 
 }

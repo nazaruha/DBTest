@@ -20,8 +20,6 @@ namespace DBTest.Models
         public string Street { get; set; }
         public string HouseNumber { get; set; }
 
-
-
         public User()
         {
 
