@@ -197,13 +197,10 @@ namespace DBTest
 
         private void GetUsersRoles()
         {
+            string script = File.ReadAllText($"{dirScripts}\\viewUserRole.sql");
             for (int i = 0; i < users.Count; i++)
             {
-                cmd.CommandText = "SELECT ur.RoleId, r.[Name] AS Role " +
-                    "FROM tblUserRoles AS ur " +
-                    "LEFT JOIN tblRoles AS r " +
-                    "ON ur.RoleId = r.Id " +
-                    $"WHERE ur.UserId = {users[i].Id}";
+                cmd.CommandText = script + $" {users[i].Id}";
                 var reader = cmd.ExecuteReader();
                 reader.Read();
                 users[i].RoleId = Int32.Parse(reader["RoleId"].ToString());
