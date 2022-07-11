@@ -17,6 +17,7 @@ namespace DBTest
     public partial class MainForm : Form
     {
         private string dirSql = "SqlTables";
+        private string dirScripts = "SqlScripts";
         private string dbName = "UsersRolesCities";
         private SqlConnection con;
         private SqlCommand cmd;
@@ -172,18 +173,8 @@ namespace DBTest
 
         private void GetAllUsersData()
         {
-            cmd.CommandText = "SELECT u.Id AS UserId, u.[Name], up.[Password], " +
-                "c.Id AS CityId, c.[Name] AS City, " +
-                "r.Id AS RegionId, r.[Name] AS Region, Street, HouseNumber " +
-                "FROM tblUserAddresses AS ua " +
-                "LEFT JOIN tblUsers AS u " +
-                "ON ua.UserId = u.Id " +
-                "LEFT JOIN tblCities AS c " +
-                "ON ua.CityId = c.Id " +
-                "LEFT JOIN tblRegions AS r " +
-                "ON c.RegionId = r.Id " +
-                "LEFT JOIN tblUserPasswords AS up " +
-                "ON u.Id = up.UserId";
+            string script = File.ReadAllText($"{dirScripts}\\viewUserAddresses.sql");
+            cmd.CommandText = script;
             users.Clear();
             using (var reader = cmd.ExecuteReader())
             {
