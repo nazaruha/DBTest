@@ -38,14 +38,17 @@ namespace DBTest
                 "FROM tblUserPasswords AS up " +
                 "LEFT JOIN tblUsers AS u " +
                 "ON up.UserId = u.Id " +
-                $"WHERE u.[Name] = '{txt_Name.Text}' AND up.[Password] = '{txt_Password.Text}'";
-                var reader = cmd.ExecuteReader();
-                reader.Read();
+                @"WHERE u.[Name] = @NameField AND up.[Password] = @PasswordField";
+                cmd.Parameters.AddWithValue("@NameField", txt_Name.Text);
+                cmd.Parameters.AddWithValue("@PasswordField", txt_Password.Text);
+                SqlDataReader reader = null;
                 try
                 {
-                    if (reader["Name"] != null && reader["Password"] != null) 
+                    reader = cmd.ExecuteReader();
+                    reader.Read();
+                    if (reader["Name"] != null && reader["Password"] != null)
                     {
-                        Error_pswrd.Text = "Passwords is occupied";
+                        Error_pswrd.Text = "Password is occupied";
                         Error_pswrd.Visible = true;
                     }
                 }
@@ -53,7 +56,9 @@ namespace DBTest
                 {
                     Error_pswrd.Visible = false;
                 }
-                reader.Close();
+                if (reader != null)
+                    reader.Close();
+                cmd.Parameters.Clear();
             }
             else
             {
@@ -80,20 +85,24 @@ namespace DBTest
             int id = 0;
             cmd.CommandText = "SELECT Id " +
                 "FROM tblRegions " +
-                $"WHERE Name = '{region}'";
+                @"WHERE Name = @RegionName";
+            cmd.Parameters.AddWithValue("@RegionName", region);
             var reader = cmd.ExecuteReader();
             reader.Read();
             id = Int32.Parse(reader["Id"].ToString());
             reader.Close();
+            cmd.Parameters.Clear();
             return id;
         }
 
         private void GetCities()
         {
+            if (cb_Region.SelectedIndex == -1) return;
             int regionId = GetRegionId(cb_Region.SelectedItem.ToString());
             cmd.CommandText = "SELECT Name " +
                 "FROM tblCities " +
-                $"WHERE RegionId = {regionId}";
+                @"WHERE RegionId = @Id";
+            cmd.Parameters.AddWithValue("@Id", regionId);
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -101,6 +110,7 @@ namespace DBTest
                     cb_City.Items.Add(reader["Name"].ToString());
                 }
             }
+            cmd.Parameters.Clear();
         }
         
         private void GetRoles()
@@ -138,6 +148,9 @@ namespace DBTest
 
             int cityId = GetCityId();
             AddAddress(lastUserId, cityId);
+
+            ClearForm();
+            MessageBox.Show("User is added!", "SUCCESS", MessageBoxButtons.OK);
         }
 
         private bool CheckInputedData()
@@ -193,7 +206,8 @@ namespace DBTest
         {
             cmd.CommandText = "SELECT Id " +
                 "FROM tblRoles " +
-                $"WHERE Name = '{cb_Role.SelectedItem.ToString()}'";
+                @"WHERE Name = @RoleName";
+            cmd.Parameters.AddWithValue("@RoleName", cb_Role.SelectedItem.ToString());
 
             int roleId;
             using (var reader = cmd.ExecuteReader())
@@ -201,6 +215,7 @@ namespace DBTest
                 reader.Read();
                 roleId = Int32.Parse(reader["Id"].ToString());
             }
+            cmd.Parameters.Clear();
             return roleId;
         }
 
@@ -208,7 +223,8 @@ namespace DBTest
         {
             cmd.CommandText = "SELECT Id " +
                 "FROM tblCities " +
-                $"WHERE Name = '{cb_City.SelectedItem.ToString()}'";
+                "WHERE Name = @NameById";
+            cmd.Parameters.AddWithValue("@NameById", cb_City.SelectedItem.ToString());
 
             int cityId;
             using (var reader = cmd.ExecuteReader())
@@ -216,36 +232,61 @@ namespace DBTest
                 reader.Read();
                 cityId = Int32.Parse(reader["Id"].ToString());
             }
+            cmd.Parameters.Clear();
             return cityId;
         }
 
         private void AddName()
         {
             cmd.CommandText = "INSERT INTO tblUsers([Name]) " +
-                $"VALUES ('{txt_Name.Text}')";
+                @"VALUES (@Name) ";
+            cmd.Parameters.AddWithValue("@Name", txt_Name.Text);
             cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
         }
 
         private void AddPassword(int lastUserId)
         {
             cmd.CommandText = "INSERT INTO tblUserPasswords(UserId, Password) " +
-                $"VALUES ('{lastUserId}', '{txt_Password.Text}')";
+                @"VALUES (@UserId, @Password)";
+            cmd.Parameters.AddWithValue("@UserId", lastUserId);
+            cmd.Parameters.AddWithValue("@Password", txt_Password.Text);
             cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
 
         }
 
         private void AddRole(int lastUserId, int roleId)
         {
             cmd.CommandText = "INSERT INTO tblUserRoles(UserId, RoleId) " +
-                $"VALUES ('{lastUserId}', '{roleId}')";
+                @"VALUES (@UserId, @RoleId)";
+            cmd.Parameters.AddWithValue("@UserId", lastUserId);
+            cmd.Parameters.AddWithValue("@RoleId", roleId);
             cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
         }
 
         private void AddAddress(int lastUserId, int cityId)
         {
             cmd.CommandText = "INSERT INTO tblUserAddresses(UserId, CityId, Street, HouseNumber) " +
-                $"VALUES ('{lastUserId}', '{cityId}', '{txt_Street.Text}', '{txt_HouseNum.Text}')";
+                @"VALUES (@UserId, @CityId, @Street, @HouseNumber)";
+            cmd.Parameters.AddWithValue("@UserId", lastUserId);
+            cmd.Parameters.AddWithValue("@CityId", cityId);
+            cmd.Parameters.AddWithValue("@Street", txt_Street.Text);
+            cmd.Parameters.AddWithValue("@HouseNumber", txt_HouseNum.Text);
             cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+        }
+
+        private void ClearForm()
+        {
+            txt_Name.Clear();
+            txt_Password.Clear();
+            txt_Street.Clear();
+            txt_HouseNum.Clear();
+            cb_Region.SelectedIndex = -1;
+            cb_City.SelectedIndex = -1;
+            cb_Role.SelectedIndex = -1;
         }
 
     }

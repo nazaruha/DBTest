@@ -200,11 +200,13 @@ namespace DBTest
             string script = File.ReadAllText($"{dirScripts}\\viewUserRole.sql");
             for (int i = 0; i < users.Count; i++)
             {
-                cmd.CommandText = script + $" {users[i].Id}";
+                cmd.CommandText = script + @"@IdField";
+                cmd.Parameters.AddWithValue("@IdField", users[i].Id);
                 var reader = cmd.ExecuteReader();
                 reader.Read();
                 users[i].RoleId = Int32.Parse(reader["RoleId"].ToString());
                 users[i].Role = reader["Role"].ToString();
+                cmd.Parameters.Clear();
                 reader.Close();
             }
         }
