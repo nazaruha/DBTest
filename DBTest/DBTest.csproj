@@ -112,6 +112,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SqlScripts\viewUserPasswords.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SqlScripts\viewUserRole.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

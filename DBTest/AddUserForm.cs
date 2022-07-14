@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace DBTest
 {
     public partial class AddUserForm : Form
     {
+        private string dirScripts { get; set; } = "SqlScripts";
         SqlCommand cmd;
         public AddUserForm(SqlCommand cmd)
         {
@@ -34,11 +36,8 @@ namespace DBTest
             }
             else if (!String.IsNullOrWhiteSpace(txt_Name.Text) && !String.IsNullOrWhiteSpace(txt_Password.Text))
             {
-                cmd.CommandText = "SELECT u.[Name], up.[Password] " +
-                "FROM tblUserPasswords AS up " +
-                "LEFT JOIN tblUsers AS u " +
-                "ON up.UserId = u.Id " +
-                @"WHERE u.[Name] = @NameField AND up.[Password] = @PasswordField";
+                string script = File.ReadAllText($"{dirScripts}\\viewUserPasswords.sql");
+                cmd.CommandText = script;
                 cmd.Parameters.AddWithValue("@NameField", txt_Name.Text);
                 cmd.Parameters.AddWithValue("@PasswordField", txt_Password.Text);
                 SqlDataReader reader = null;
